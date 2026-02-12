@@ -58,7 +58,7 @@
 <body>
 
 <div class="container" id="box">
-    <h1 id="question">Will you be my Valentine? 💖</h1>
+    <h1 id="question">Will you be my Valentine,Sachin? 💖</h1>
     <div id="buttons">
         <button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
         <button id="noBtn" onclick="noStep1()">No 😢</button>
@@ -75,6 +75,10 @@ function yesClicked() {
         <h2>Happy Valentine's Day,Honey!!✨ You are the One </h2>
         <img src="cat.gif">
     `;
+    confetti({
+        particleCount: 200,
+        spread: 120,
+        origin: { y: 0.6 }
 }
 
 function noStep1() {
@@ -115,3 +119,4 @@ setInterval(createHeart, 300);
 
 </body>
 </html>
+
