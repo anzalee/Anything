@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Be My Valentine 💖</title>
-
     <style>
         body {
             margin: 0;
@@ -25,91 +24,89 @@
             z-index: 10;
         }
 
-        h1 {
-            color: #e91e63;
-        }
-
         button {
-            padding: 12px 30px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            margin: 15px;
-            transition: 0.3s;
+            margin: 10px;
         }
 
-        #yesBtn {
-            background-color: #e91e63;
-            color: white;
-        }
+        #yesBtn { background: #e91e63; color: white; }
+        #noBtn { background: gray; color: white; }
 
-        #noBtn {
-            background-color: gray;
-            color: white;
-            position: absolute;
+        img {
+            margin-top: 20px;
+            width: 200px;
+            border-radius: 15px;
         }
 
         .heart {
             position: absolute;
-            color: rgba(255,255,255,0.8);
             font-size: 24px;
             animation: floatUp 6s linear infinite;
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) scale(0.5);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh); opacity:1; }
+            100% { transform: translateY(-10vh); opacity:0; }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="container" id="box">
     <h1 id="question">Will you be my Valentine? 💖</h1>
-    <button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
-    <button id="noBtn">No 😢</button>
+    <div id="buttons">
+        <button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
+        <button id="noBtn" onclick="noStep1()">No 😢</button>
+    </div>
 </div>
 
 <script>
 
-// YES CLICK
+let step = 0;
+
 function yesClicked() {
-    document.querySelector(".container").innerHTML =
-        "<h1>Yayyyy 💖</h1><h2>Happy Valentine's Day 🌹✨</h2>";
+    document.getElementById("box").innerHTML = `
+        <h1>Yayyyy 💖</h1>
+        <h2>Happy Valentine's Day,Honey!!✨ You are the One </h2>
+        <img src="cat.gif">
+    `;
 }
 
-// MAKE NO BUTTON RUN AWAY
-const noBtn = document.getElementById("noBtn");
+function noStep1() {
+    document.getElementById("question").innerText = "Are you sure baby? 🥺";
+    document.getElementById("buttons").innerHTML =
+        `<button onclick="noStep2()">Yes 😢</button>
+         <button onclick="yesClicked()">No wait 💕</button>`;
+}
 
-noBtn.addEventListener("mouseover", function() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-});
+function noStep2() {
+    document.getElementById("question").innerText = "So,you don't love me anymore? 💔";
+    document.getElementById("buttons").innerHTML =
+        `<button onclick="finalStep()">Okay...</button>`;
+}
 
-// FLOATING HEARTS
+function finalStep() {
+    document.getElementById("box").innerHTML = `
+        <h1>Say Happy Valentine's Day 😤💖</h1>
+        <img src="cat.gif">
+        <br><br>
+        <button onclick="yesClicked()">Happy Valentine's Day 💕</button>
+    `;
+}
+
+// Floating hearts
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     heart.innerHTML = "💖";
     heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = (Math.random() * 20 + 15) + "px";
-    heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
-
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 6000);
+    setTimeout(() => heart.remove(), 6000);
 }
 
 setInterval(createHeart, 300);
