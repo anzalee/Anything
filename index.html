@@ -1,121 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Be My Valentine 💖</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Algerian, sans-serif;
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<title>Be My Valentine 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 10;
-        }
+<style>
+body{
+    text-align:center;
+    font-family:Algerian;
+    background: linear-gradient(to right, #ff9a9e, #fad0c4);
+    overflow:hidden;
+}
 
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 10px;
-        }
+button{
+    padding:12px 25px;
+    font-size:18px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
 
-        #yesBtn { background: #e91e63; color: white; }
-        #noBtn { background: gray; color: white; }
+#yesBtn{ background:#ff4d6d; color:white; }
+#noBtn{ background:#444; color:white; position:absolute; }
 
-        img {
-            margin-top: 20px;
-            width: 200px;
-            border-radius: 15px;
-        }
-
-        .heart {
-            position: absolute;
-            font-size: 24px;
-            animation: floatUp 6s linear infinite;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh); opacity:1; }
-            100% { transform: translateY(-10vh); opacity:0; }
-        }
-    </style>
+#catGif{ display:none; margin-top:20px; }
+</style>
 </head>
 
 <body>
 
-<div class="container" id="box">
-    <h1 id="question">Will you be my Valentine,Sachin? 💖</h1>
-    <div id="buttons">
-        <button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
-        <button id="noBtn" onclick="noStep1()">No 😢</button>
-    </div>
-</div>
+<h1 id="mainText"></h1>
+
+<input type="text" id="nameInput" placeholder="Enter your name 💕">
+<br><br>
+
+<button id="yesBtn" onclick="yesClicked()">Yes 💘</button>
+<button id="noBtn" onclick="noClicked()">No 😢</button>
+
+<br>
+<img id="catGif" src="cat.gif" width="250">
+
+<audio id="sadMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 
-let step = 0;
+let name = "";
+let noStage = 0;
 
-function yesClicked() {
-    document.getElementById("box").innerHTML = `
-        <h1>Yayyyy 💖</h1>
-        <h2>Happy Valentine's Day,Honey!!✨ You are the One </h2>
-        <img src="cat.gif">
-    `;
-   
+// Typing animation
+function typeText(text, elementId, speed=60){
+    let i=0;
+    document.getElementById(elementId).innerHTML="";
+    function typing(){
+        if(i<text.length){
+            document.getElementById(elementId).innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing,speed);
+        }
+    }
+    typing();
 }
 
-function noStep1() {
-    document.getElementById("question").innerText = "Are you sure baby? 🥺";
-    document.getElementById("buttons").innerHTML =
-        `<button onclick="noStep2()">Yes 😢</button>
-         <button onclick="yesClicked()">No wait 💕</button>`;
+// Initial text
+typeText("Will you be my Valentine? 💖","mainText");
+
+// YES CLICK
+function yesClicked(){
+    name = document.getElementById("nameInput").value || "My Love";
+    document.getElementById("sadMusic").pause();
+    typeText("Yayyyy 💕 Happy Valentine's Day " + name + " 💖","mainText");
+    document.getElementById("catGif").style.display="block";
+
+    // Confetti
+    confetti({
+        particleCount: 200,
+        spread: 120,
+        origin: { y: 0.6 }
+    });
 }
 
-function noStep2() {
-    document.getElementById("question").innerText = "So,you don't love me anymore? 💔";
-    document.getElementById("buttons").innerHTML =
-        `<button onclick="finalStep()">Okay...</button>`;
+// NO CLICK
+function noClicked(){
+    name = document.getElementById("nameInput").value || "baby";
+    let sad = document.getElementById("sadMusic");
+    sad.play();
+
+    if(noStage==0){
+        typeText("Are you sure " + name + "? 😢","mainText");
+        noStage++;
+    }
+    else if(noStage==1){
+        typeText("You don't love me anymore? 💔","mainText");
+        noStage++;
+    }
+    else{
+        typeText("Please say Happy Valentine's Day 🥺","mainText");
+        document.getElementById("catGif").style.display="block";
+    }
 }
 
-function finalStep() {
-    document.getElementById("box").innerHTML = `
-        <h1>Say Happy Valentine's Day 😤💖</h1>
-        <img src="cat.gif">
-        <br><br>
-        <button onclick="yesClicked()">Happy Valentine's Day 💕</button>
-    `;
-}
-
-// Floating hearts
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000);
-}
-
-setInterval(createHeart, 300);
+// Floating impossible NO button
+let noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",function(){
+    let x = Math.random() * (window.innerWidth - 100);
+    let y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
 
 </script>
 
 </body>
 </html>
-
-
-
